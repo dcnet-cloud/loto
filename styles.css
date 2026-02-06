@@ -75,6 +75,23 @@ header h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 16px 20px 12px;
+  position: relative;
+  box-shadow:
+    0 0 15px rgba(245, 197, 24, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.display::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(245, 197, 24, 0.15);
+  border-radius: 13px;
+  pointer-events: none;
 }
 
 .current-number {
@@ -86,6 +103,7 @@ header h1 {
   align-items: center;
   justify-content: center;
   transition: transform 0.2s;
+  text-shadow: 0 0 20px rgba(245, 197, 24, 0.4);
 }
 
 .current-number.pop {
@@ -105,8 +123,13 @@ header h1 {
 
 .stats {
   font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 2px;
+  color: var(--gold);
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 197, 24, 0.2);
+  width: 100%;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 /* Controls */

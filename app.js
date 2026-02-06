@@ -51,18 +51,120 @@ async function speak(number) {
   }
 }
 
+// --- Đọc số tiếng Việt ---
+function numberToVietnamese(n) {
+  if (n === 0) return 'không';
+  const dv = ['', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+  const nghin = Math.floor(n / 1000);
+  const tram = Math.floor((n % 1000) / 100);
+  const chuc = Math.floor((n % 100) / 10);
+  const donVi = n % 10;
+  const parts = [];
+  if (nghin > 0) {
+    parts.push(dv[nghin] + ' ngàn');
+    if (tram === 0 && chuc > 0) parts.push('không trăm');
+  }
+  if (tram > 0) parts.push(dv[tram] + ' trăm');
+  if (chuc === 1) {
+    parts.push('mười');
+  } else if (chuc > 1) {
+    parts.push(dv[chuc] + ' mươi');
+  } else if (chuc === 0 && (tram > 0 || nghin > 0) && donVi > 0) {
+    parts.push('lẻ');
+  }
+  if (donVi > 0) {
+    if (chuc >= 2 && donVi === 1) parts.push('mốt');
+    else if (chuc >= 1 && donVi === 5) parts.push('lăm');
+    else parts.push(dv[donVi]);
+  }
+  return parts.join(' ');
+}
+
+// --- Sinh câu rao toán học ngẫu nhiên ---
+function getFactorPairs(n) {
+  const pairs = [];
+  for (let i = 2; i * i <= n; i++) {
+    if (n % i === 0) {
+      pairs.push([i, n / i]);
+      if (i !== n / i) pairs.push([n / i, i]);
+    }
+  }
+  return pairs;
+}
+
+function generateMathPhrase(n) {
+  const vi = numberToVietnamese;
+  const ops = ['sub', 'div', 'sqrt'];
+  if (n >= 2) ops.push('add');
+  const factors = getFactorPairs(n);
+  if (factors.length > 0) ops.push('mul');
+  const sqrtN = Math.sqrt(n);
+  if (Number.isInteger(sqrtN) && sqrtN > 1) ops.push('square');
+  const cbrtN = Math.round(Math.cbrt(n));
+  if (cbrtN > 1 && cbrtN * cbrtN * cbrtN === n) ops.push('cube');
+  if (n > 1 && (n & (n - 1)) === 0) ops.push('pow2');
+
+  const op = ops[randomInt(ops.length)];
+  let phrase;
+  switch (op) {
+    case 'add': {
+      const a = 1 + randomInt(n - 1);
+      phrase = `${vi(a)} cộng ${vi(n - a)} bằng mấy?`;
+      break;
+    }
+    case 'sub': {
+      const b = 1 + randomInt(30);
+      phrase = `${vi(n + b)} trừ ${vi(b)} bằng mấy?`;
+      break;
+    }
+    case 'mul': {
+      const p = factors[randomInt(factors.length)];
+      phrase = `${vi(p[0])} nhân ${vi(p[1])} bằng mấy?`;
+      break;
+    }
+    case 'div': {
+      const b = 2 + randomInt(9);
+      phrase = `${vi(n * b)} chia ${vi(b)} bằng mấy?`;
+      break;
+    }
+    case 'sqrt':
+      phrase = `Căn bậc hai của ${vi(n * n)} bằng mấy?`;
+      break;
+    case 'square':
+      phrase = `${vi(sqrtN)} bình phương bằng mấy?`;
+      break;
+    case 'cube':
+      phrase = `${vi(cbrtN)} mũ ba bằng mấy?`;
+      break;
+    case 'pow2':
+      phrase = `Hai mũ ${vi(Math.log2(n))} bằng mấy?`;
+      break;
+  }
+  return phrase.charAt(0).toUpperCase() + phrase.slice(1);
+}
+
 /**
- * Random chọn 1 câu rao cho số.
- * Return null nếu không có câu rao hoặc random trúng "đọc số thường".
+ * Random chọn loại câu rao cho số.
+ * Pool cố định 3 loại (áp dụng cho TẤT CẢ số 1-60):
+ *   1. Câu rao văn hóa → random trong bộ câu của số đó
+ *   2. Toán học → random phép tính → random các số
+ *   3. Null → đọc "Số X" bình thường
  */
 function getRandomPhrase(number) {
-  if (typeof lottoData === 'undefined') return null;
-  const phrases = lottoData[number];
-  if (!phrases || phrases.length === 0) return null;
+  const category = ['culture', 'math', null][randomInt(3)];
 
-  // Thêm 1 option null (đọc số bình thường) vào pool random
-  const pool = [...phrases, null];
-  return pool[randomInt(pool.length)];
+  if (category === 'culture') {
+    if (typeof lottoData !== 'undefined' && lottoData[number] && lottoData[number].length > 0) {
+      return lottoData[number][randomInt(lottoData[number].length)];
+    }
+    return null; // chưa có câu rao văn hóa → đọc số bình thường
+  }
+
+  if (category === 'math') {
+    return generateMathPhrase(number);
+  }
+
+  return null; // đọc số bình thường
 }
 
 // Preload voices (some browsers load async)

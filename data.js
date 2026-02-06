@@ -1,10 +1,9 @@
 /**
- * Câu rao Lô Tô - mỗi số có mảng các câu rao.
- * Random chọn 1 câu mỗi lần gọi.
- * Số nào chưa có câu rao (hoặc random trúng null) → đọc "Số X" bình thường.
+ * Câu rao Lô Tô - câu rao văn hóa/bài hát cho mỗi số.
+ * Câu rao toán học được tự động sinh ngẫu nhiên bởi app.js (generateMathPhrase).
  *
  * Format: { [số]: ["câu rao 1", "câu rao 2", ...] }
- * Mỗi câu rao KHÔNG chứa phần "là con số X" - phần đó sẽ được đọc tự động sau khi chờ.
+ * Mỗi câu rao KHÔNG chứa phần "là con số X" - phần đó sẽ được đọc tự động.
  */
 const lottoData = {
   1: [
@@ -52,6 +51,4 @@ const lottoData = {
   15: [
     'Con bác Năm ở xa mới về. Dáng người xinh sao xinh quá. Trông ngẩn ngơ đám trai làng ta. Mới ngày nào quay dây nhảy tiền. Mới ngày nào tung tăng khắp miền. Mà giờ đây Cô Thắm xinh như nàng tiên',
   ],
-
-  // --- Số 16-60: bổ sung dần, hiện tại đọc "Số X" bình thường ---
 };
