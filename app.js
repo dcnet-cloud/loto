@@ -145,13 +145,14 @@ function generateMathPhrase(n) {
 
 /**
  * Random chọn loại câu rao cho số.
- * Pool cố định 3 loại (áp dụng cho TẤT CẢ số 1-60):
+ * Pool cố định 4 loại (áp dụng cho TẤT CẢ số 1-60):
  *   1. Câu rao văn hóa → random trong bộ câu của số đó
  *   2. Toán học → random phép tính → random các số
- *   3. Null → đọc "Số X" bình thường
+ *   3. Biển số xe → "Biển số xe [Tỉnh] là mấy?"
+ *   4. Null → đọc "Số X" bình thường
  */
 function getRandomPhrase(number) {
-  const category = ['culture', 'math', null][randomInt(3)];
+  const category = ['culture', 'math', 'bienso', null][randomInt(4)];
 
   if (category === 'culture') {
     if (typeof lottoData !== 'undefined' && lottoData[number] && lottoData[number].length > 0) {
@@ -162,6 +163,13 @@ function getRandomPhrase(number) {
 
   if (category === 'math') {
     return generateMathPhrase(number);
+  }
+
+  if (category === 'bienso') {
+    if (typeof licensePlateData !== 'undefined' && licensePlateData[number]) {
+      return `Biển số xe ${licensePlateData[number]} là mấy?`;
+    }
+    return null; // số này không có biển số xe → đọc số bình thường
   }
 
   return null; // đọc số bình thường

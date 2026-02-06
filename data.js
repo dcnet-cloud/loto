@@ -52,3 +52,57 @@ const lottoData = {
     'Con bác Năm ở xa mới về. Dáng người xinh sao xinh quá. Trông ngẩn ngơ đám trai làng ta. Mới ngày nào quay dây nhảy tiền. Mới ngày nào tung tăng khắp miền. Mà giờ đây Cô Thắm xinh như nàng tiên',
   ],
 };
+
+/**
+ * Biển số xe các tỉnh thành Việt Nam (mã 2 số đầu).
+ * Chỉ chứa các số trong phạm vi 1-60.
+ * Số 1-10: không có biển số. Số 13, 42, 44, 45, 46: mã dự trữ.
+ * Format: { [số]: "Tên tỉnh/thành phố" }
+ */
+const licensePlateData = {
+  11: 'Cao Bằng',
+  12: 'Lạng Sơn',
+  14: 'Quảng Ninh',
+  15: 'Hải Phòng',
+  16: 'Hải Phòng',
+  17: 'Thái Bình',
+  18: 'Nam Định',
+  19: 'Phú Thọ',
+  20: 'Thái Nguyên',
+  21: 'Yên Bái',
+  22: 'Tuyên Quang',
+  23: 'Hà Giang',
+  24: 'Lào Cai',
+  25: 'Lai Châu',
+  26: 'Sơn La',
+  27: 'Điện Biên',
+  28: 'Hòa Bình',
+  29: 'Hà Nội',
+  30: 'Hà Nội',
+  31: 'Hà Nội',
+  32: 'Hà Nội',
+  33: 'Hà Nội',
+  34: 'Hải Dương',
+  35: 'Ninh Bình',
+  36: 'Thanh Hóa',
+  37: 'Nghệ An',
+  38: 'Hà Tĩnh',
+  39: 'Đồng Nai',
+  40: 'Hà Nội',
+  41: 'Thành phố Hồ Chí Minh',
+  43: 'Đà Nẵng',
+  47: 'Đắk Lắk',
+  48: 'Đắk Nông',
+  49: 'Lâm Đồng',
+  50: 'Thành phố Hồ Chí Minh',
+  51: 'Thành phố Hồ Chí Minh',
+  52: 'Thành phố Hồ Chí Minh',
+  53: 'Thành phố Hồ Chí Minh',
+  54: 'Thành phố Hồ Chí Minh',
+  55: 'Thành phố Hồ Chí Minh',
+  56: 'Thành phố Hồ Chí Minh',
+  57: 'Thành phố Hồ Chí Minh',
+  58: 'Thành phố Hồ Chí Minh',
+  59: 'Thành phố Hồ Chí Minh',
+  60: 'Đồng Nai',
+};
