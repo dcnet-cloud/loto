@@ -97,10 +97,14 @@ function getFactorPairs(n) {
 
 function generateMathPhrase(n) {
   const vi = numberToVietnamese;
-  const ops = ['sub', 'div', 'sqrt'];
+  const ops = ['sub'];
   if (n >= 2) ops.push('add');
   const factors = getFactorPairs(n);
   if (factors.length > 0) ops.push('mul');
+  // div: chỉ cho phép khi tích ≤ 120 (dễ tính nhẩm)
+  if (n <= 60) ops.push('div');
+  // sqrt: chỉ cho số nhỏ (n ≤ 10) để n² ≤ 100
+  if (n <= 10) ops.push('sqrt');
   const sqrtN = Math.sqrt(n);
   if (Number.isInteger(sqrtN) && sqrtN > 1) ops.push('square');
   const cbrtN = Math.round(Math.cbrt(n));
@@ -116,7 +120,7 @@ function generateMathPhrase(n) {
       break;
     }
     case 'sub': {
-      const b = 1 + randomInt(30);
+      const b = 1 + randomInt(Math.min(20, 99 - n));
       phrase = `${vi(n + b)} trừ ${vi(b)} bằng mấy?`;
       break;
     }
@@ -126,7 +130,8 @@ function generateMathPhrase(n) {
       break;
     }
     case 'div': {
-      const b = 2 + randomInt(9);
+      const maxB = Math.max(2, Math.min(5, Math.floor(120 / n)));
+      const b = 2 + randomInt(maxB - 1);
       phrase = `${vi(n * b)} chia ${vi(b)} bằng mấy?`;
       break;
     }
@@ -206,7 +211,7 @@ function getRandomPhrase(number) {
     const name = lotteryAnimalData[number];
     const templates = [
       `Trong số đề, ${name} là số mấy?`,
-      `Tịch số đề, ${name} mang số bao nhiêu?`,
+      `Trong số đề, ${name} mang số bao nhiêu?`,
     ];
     return templates[randomInt(templates.length)];
   }
@@ -262,6 +267,7 @@ function callNumber() {
 // --- DOM ---
 const $number = document.getElementById('currentNumber');
 const $count = document.getElementById('calledCount');
+const $recent = document.getElementById('recentNumbers');
 const $board = document.getElementById('numberBoard');
 const $callBtn = document.getElementById('callBtn');
 const $resetBtn = document.getElementById('resetBtn');
@@ -288,6 +294,7 @@ function updateDisplay(num) {
   $number.classList.add('pop');
 
   $count.textContent = called.length;
+  renderRecent();
 
   const cell = document.getElementById(`c${num}`);
   if (cell) {
@@ -296,10 +303,18 @@ function updateDisplay(num) {
   }
 }
 
+function renderRecent() {
+  const last5 = called.slice(-5).reverse();
+  $recent.innerHTML = last5.map((n, i) =>
+    `<div class="recent-ball${i === 0 ? ' latest' : ''}">${n}</div>`
+  ).join('');
+}
+
 function resetDisplay() {
   $number.textContent = '--';
   $number.classList.remove('pop', 'done');
   $count.textContent = '0';
+  $recent.innerHTML = '';
   $callBtn.disabled = false;
   document.querySelectorAll('.cell.called').forEach(c => {
     c.classList.remove('called');
@@ -394,6 +409,18 @@ $confirmNo.addEventListener('click', () => {
 // Close overlay on background click
 $overlay.addEventListener('click', (e) => {
   if (e.target === $overlay) $overlay.classList.add('hidden');
+});
+
+// --- QR Popup ---
+const $qrOverlay = document.getElementById('qrOverlay');
+document.getElementById('qrOpenBtn').addEventListener('click', () => {
+  $qrOverlay.classList.remove('hidden');
+});
+document.getElementById('qrCloseBtn').addEventListener('click', () => {
+  $qrOverlay.classList.add('hidden');
+});
+$qrOverlay.addEventListener('click', (e) => {
+  if (e.target === $qrOverlay) $qrOverlay.classList.add('hidden');
 });
 
 // --- Init ---

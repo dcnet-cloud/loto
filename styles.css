@@ -33,7 +33,7 @@ body {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding: 12px;
+  padding: 12px 12px 28px;
   height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -66,6 +66,99 @@ header h1 {
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--gold);
+}
+
+/* QR open link */
+.qr-open-link {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.qr-open-link:hover {
+  color: var(--gold);
+}
+
+/* Footer */
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--gold);
+  padding: 6px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--cell-border);
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  z-index: 10;
+}
+
+/* QR Popup */
+.qr-box {
+  background: var(--surface);
+  border: 1px solid var(--cell-border);
+  border-radius: 20px;
+  padding: 32px 28px 24px;
+  text-align: center;
+  width: 300px;
+  max-width: 90vw;
+}
+
+.qr-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.qr-img {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 0 auto 16px;
+  width: 200px;
+  height: 200px;
+}
+
+.qr-img svg {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-url {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-bottom: 8px;
+}
+
+.qr-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.btn-qr-close {
+  background: var(--accent);
+  color: #fff;
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  letter-spacing: 2px;
 }
 
 /* Display */
@@ -130,6 +223,37 @@ header h1 {
   width: 100%;
   font-weight: 600;
   letter-spacing: 0.5px;
+}
+
+/* Recent called numbers */
+.recent {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  min-height: 32px;
+}
+
+.recent-ball {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--cell-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--cell-border);
+  transition: all 0.3s;
+}
+
+.recent-ball.latest {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(245, 197, 24, 0.4);
 }
 
 /* Controls */
@@ -317,7 +441,7 @@ header h1 {
   #app {
     max-width: 100%;
     flex-direction: row;
-    padding: 16px;
+    padding: 16px 16px 40px;
     gap: 16px;
   }
 
