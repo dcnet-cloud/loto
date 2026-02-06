@@ -6,26 +6,63 @@ function randomInt(max) {
 }
 
 // --- Speech ---
-function speak(number) {
+let speakAbort = false;
+
+function sayText(text) {
+  return new Promise(resolve => {
+    if (!('speechSynthesis' in window)) { resolve(); return; }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'vi-VN';
+    utterance.rate = 0.9;
+    const voices = speechSynthesis.getVoices();
+    const viVoice = voices.find(v => v.lang.startsWith('vi'));
+    if (viVoice) utterance.voice = viVoice;
+    utterance.onend = resolve;
+    utterance.onerror = resolve;
+    speechSynthesis.speak(utterance);
+  });
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Flow gọi số:
+ * - Có câu rao: đọc câu rao → chờ 3s (user đoán) → đọc "là con số X"
+ * - Không có câu rao: đọc "Số X" bình thường
+ */
+async function speak(number) {
   if (!('speechSynthesis' in window)) return;
-
   speechSynthesis.cancel();
+  speakAbort = false;
 
-  let text = `Số ${number}`;
-  console.log('text: ', text);
-  if (typeof lottoData !== 'undefined' && lottoData[number - 1]) {
-    text = lottoData[number - 1];
+  // Lấy câu rao random (nếu có)
+  const phrase = getRandomPhrase(number);
+
+  if (phrase) {
+    await sayText(phrase);
+    if (speakAbort) return;
+    await delay(3000);
+    if (speakAbort) return;
+    await sayText(`là con số ${number}`);
+  } else {
+    await sayText(`Số ${number}`);
   }
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'vi-VN';
-  utterance.rate = 0.9;
+}
 
-  // Try to find a Vietnamese voice
-  const voices = speechSynthesis.getVoices();
-  const viVoice = voices.find(v => v.lang.startsWith('vi'));
-  if (viVoice) utterance.voice = viVoice;
+/**
+ * Random chọn 1 câu rao cho số.
+ * Return null nếu không có câu rao hoặc random trúng "đọc số thường".
+ */
+function getRandomPhrase(number) {
+  if (typeof lottoData === 'undefined') return null;
+  const phrases = lottoData[number];
+  if (!phrases || phrases.length === 0) return null;
 
-  speechSynthesis.speak(utterance);
+  // Thêm 1 option null (đọc số bình thường) vào pool random
+  const pool = [...phrases, null];
+  return pool[randomInt(pool.length)];
 }
 
 // Preload voices (some browsers load async)
@@ -110,11 +147,11 @@ const $intervalInput = document.getElementById('intervalInput');
 let autoTimer = null;
 let isAuto = false;
 
-function doCall() {
+async function doCall() {
   const num = callNumber();
   if (num === null) return false;
   updateDisplay(num);
-  speak(num);
+  await speak(num);
   if (remaining.length === 0) {
     stopAuto();
     gameOver();
@@ -142,10 +179,10 @@ function stopAuto() {
   $intervalInput.disabled = false;
 }
 
-function autoTick() {
+async function autoTick() {
   if (!isAuto) return;
-  const ok = doCall();
-  if (ok) {
+  const ok = await doCall();
+  if (ok && isAuto) {
     const sec = Math.max(1, parseInt($intervalInput.value) || 5);
     autoTimer = setTimeout(autoTick, sec * 1000);
   }
@@ -172,6 +209,7 @@ $resetBtn.addEventListener('click', () => {
 
 $confirmYes.addEventListener('click', () => {
   stopAuto();
+  speakAbort = true;
   speechSynthesis.cancel();
   initGame();
   resetDisplay();
