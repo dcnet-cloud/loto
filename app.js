@@ -35,7 +35,7 @@ let remaining = [];
 let called = [];
 
 function initGame() {
-  remaining = Array.from({ length: 90 }, (_, i) => i + 1);
+  remaining = Array.from({ length: 60 }, (_, i) => i + 1);
   called = [];
 }
 
@@ -59,7 +59,7 @@ const $confirmNo = document.getElementById('confirmNo');
 
 function renderBoard() {
   $board.innerHTML = '';
-  for (let i = 1; i <= 90; i++) {
+  for (let i = 1; i <= 60; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = `c${i}`;
