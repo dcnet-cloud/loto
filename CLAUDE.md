@@ -21,13 +21,13 @@ No tests exist. No linter configured.
 Vanilla JS app with no framework. Four source files compose the entire app:
 
 - **`index.html`** — Semantic layout: sidebar (header, display, controls, auto-settings) + board (number grid). `data.js` must load before `app.js`.
-- **`data.js`** — `lottoData` object mapping numbers to arrays of Vietnamese cultural phrase strings (numbers 1–15). `licensePlateData` object mapping numbers 11–60 to Vietnamese province names for license plate riddles.
+- **`data.js`** — `lottoData` (cultural phrases, numbers 1–15), `licensePlateData` (province license plates, numbers 11–60), `lotteryAnimalData` (tịch số đề animal symbols, numbers 1–60, cycle of 40).
 - **`app.js`** — All game logic, TTS, and DOM manipulation in a single file:
   - `randomInt()` — Cryptographic RNG via `crypto.getRandomValues`
   - `speak()` / `sayText()` — Web Speech API (vi-VN) with suspense pattern: reads riddle → 3s pause → reveals "là con số X"
   - `numberToVietnamese()` — Vietnamese number pronunciation with linguistic rules (mười/mươi, mốt, lăm, lẻ)
   - `generateMathPhrase()` — Dynamic math riddle generator (add/sub/mul/div/sqrt/square/cube/pow2)
-  - `getRandomPhrase()` — 4-category random selection: culture (from lottoData), math (generated), bienso (license plate riddle from licensePlateData), or null (plain reading)
+  - `getRandomPhrase()` — 5-category random selection: culture, math, bienso (license plates), sode (lottery animals), or null (plain reading)
   - Game state: `remaining[]` / `called[]` arrays, 60-number pool
   - Auto mode: configurable interval (1–30s), waits for speech completion between calls
 - **`styles.css`** — CSS custom properties theme, responsive layout with 3 breakpoints (mobile portrait, desktop ≥768px, desktop ≥1200px, mobile landscape). Sidebar uses `display: contents` on mobile to flatten into flex parent.

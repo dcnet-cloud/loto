@@ -145,14 +145,15 @@ function generateMathPhrase(n) {
 
 /**
  * Random chọn loại câu rao cho số.
- * Pool cố định 4 loại (áp dụng cho TẤT CẢ số 1-60):
+ * Pool cố định 5 loại (áp dụng cho TẤT CẢ số 1-60):
  *   1. Câu rao văn hóa → random trong bộ câu của số đó
  *   2. Toán học → random phép tính → random các số
  *   3. Biển số xe → "Biển số xe [Tỉnh] là mấy?"
- *   4. Null → đọc "Số X" bình thường
+ *   4. Số đề con vật → "Trong số đề, con [X] là số mấy?"
+ *   5. Null → đọc "Số X" bình thường
  */
 function getRandomPhrase(number) {
-  const category = ['culture', 'math', 'bienso', null][randomInt(4)];
+  const category = ['culture', 'math', 'bienso', 'sode', null][randomInt(5)];
 
   if (category === 'culture') {
     if (typeof lottoData !== 'undefined' && lottoData[number] && lottoData[number].length > 0) {
@@ -167,9 +168,24 @@ function getRandomPhrase(number) {
 
   if (category === 'bienso') {
     if (typeof licensePlateData !== 'undefined' && licensePlateData[number]) {
-      return `Biển số xe ${licensePlateData[number]} là mấy?`;
+      const province = licensePlateData[number];
+      const templates = [
+        `Xe đăng ký tại ${province} mang đầu biển số mấy?`,
+        `Đầu biển số mấy là của ${province}?`,
+        `Biển số xe ${province} bắt đầu bằng số mấy?`,
+        `Tỉnh ${province} có đầu biển số xe là bao nhiêu?`,
+      ];
+      return templates[randomInt(templates.length)];
     }
     return null; // số này không có biển số xe → đọc số bình thường
+  }
+
+  if (category === 'sode') {
+    if (typeof lotteryAnimalData !== 'undefined' && lotteryAnimalData[number]) {
+      const name = lotteryAnimalData[number];
+      return `Trong số đề, ${name} là số mấy?`;
+    }
+    return null;
   }
 
   return null; // đọc số bình thường
