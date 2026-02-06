@@ -6,7 +6,7 @@ function randomInt(max) {
 }
 
 // --- Speech ---
-let speakAbort = false;
+let speakGen = 0;
 
 function sayText(text) {
   return new Promise(resolve => {
@@ -31,20 +31,23 @@ function delay(ms) {
  * Flow gọi số:
  * - Có câu rao: đọc câu rao → chờ 3s (user đoán) → đọc "là con số X"
  * - Không có câu rao: đọc "Số X" bình thường
+ *
+ * Dùng generation counter để tránh race condition khi gọi số liên tục.
+ * Mỗi lần speak() mới, gen tăng → speak() cũ tự dừng.
  */
 async function speak(number) {
   if (!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
-  speakAbort = false;
+  const gen = ++speakGen;
 
   // Lấy câu rao random (nếu có)
   const phrase = getRandomPhrase(number);
 
   if (phrase) {
     await sayText(phrase);
-    if (speakAbort) return;
+    if (gen !== speakGen) return;
     await delay(3000);
-    if (speakAbort) return;
+    if (gen !== speakGen) return;
     await sayText(`là con số ${number}`);
   } else {
     await sayText(`Số ${number}`);
@@ -377,7 +380,7 @@ $resetBtn.addEventListener('click', () => {
 
 $confirmYes.addEventListener('click', () => {
   stopAuto();
-  speakAbort = true;
+  speakGen++;
   speechSynthesis.cancel();
   initGame();
   resetDisplay();
