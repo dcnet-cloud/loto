@@ -145,21 +145,43 @@ function generateMathPhrase(n) {
 
 /**
  * Random chọn loại câu rao cho số.
- * Pool cố định 5 loại (áp dụng cho TẤT CẢ số 1-60):
- *   1. Câu rao văn hóa → random trong bộ câu của số đó
- *   2. Toán học → random phép tính → random các số
- *   3. Biển số xe → "Biển số xe [Tỉnh] là mấy?"
- *   4. Số đề con vật → "Trong số đề, con [X] là số mấy?"
- *   5. Null → đọc "Số X" bình thường
+ * Hệ thống chọn thông minh: chỉ random trong các pool CÓ DỮ LIỆU cho số đó.
+ * 9 loại câu rao:
+ *   1. Văn hóa/bài hát (lottoData)
+ *   2. Toán học (luôn có)
+ *   3. Biển số xe (licensePlateData)
+ *   4. Số đề con vật (lotteryAnimalData)
+ *   5. Ca dao tục ngữ (proverbData)
+ *   6. Câu đố vui (riddleData)
+ *   7. Bóng đá/thể thao (footballData)
+ *   8. Ngày tháng lịch sử (historyDateData)
+ *   9. Null → đọc "Số X" bình thường
  */
 function getRandomPhrase(number) {
-  const category = ['culture', 'math', 'bienso', 'sode', null][randomInt(5)];
+  // Thu thập các pool có dữ liệu cho số này
+  const available = [];
+
+  if (typeof lottoData !== 'undefined' && lottoData[number] && lottoData[number].length > 0)
+    available.push('culture');
+  available.push('math'); // luôn có
+  if (typeof licensePlateData !== 'undefined' && licensePlateData[number])
+    available.push('bienso');
+  if (typeof lotteryAnimalData !== 'undefined' && lotteryAnimalData[number])
+    available.push('sode');
+  if (typeof proverbData !== 'undefined' && proverbData[number] && proverbData[number].length > 0)
+    available.push('proverb');
+  if (typeof riddleData !== 'undefined' && riddleData[number] && riddleData[number].length > 0)
+    available.push('riddle');
+  if (typeof footballData !== 'undefined' && footballData[number] && footballData[number].length > 0)
+    available.push('football');
+  if (typeof historyDateData !== 'undefined' && historyDateData[number] && historyDateData[number].length > 0)
+    available.push('history');
+  available.push(null); // đọc số bình thường
+
+  const category = available[randomInt(available.length)];
 
   if (category === 'culture') {
-    if (typeof lottoData !== 'undefined' && lottoData[number] && lottoData[number].length > 0) {
-      return lottoData[number][randomInt(lottoData[number].length)];
-    }
-    return null; // chưa có câu rao văn hóa → đọc số bình thường
+    return lottoData[number][randomInt(lottoData[number].length)];
   }
 
   if (category === 'math') {
@@ -167,25 +189,45 @@ function getRandomPhrase(number) {
   }
 
   if (category === 'bienso') {
-    if (typeof licensePlateData !== 'undefined' && licensePlateData[number]) {
-      const province = licensePlateData[number];
-      const templates = [
-        `Xe đăng ký tại ${province} mang đầu biển số mấy?`,
-        `Đầu biển số mấy là của ${province}?`,
-        `Biển số xe ${province} bắt đầu bằng số mấy?`,
-        `Tỉnh ${province} có đầu biển số xe là bao nhiêu?`,
-      ];
-      return templates[randomInt(templates.length)];
-    }
-    return null; // số này không có biển số xe → đọc số bình thường
+    const province = licensePlateData[number];
+    const templates = [
+      `Xe đăng ký tại ${province} mang đầu biển số mấy?`,
+      `Đầu biển số mấy là của ${province}?`,
+      `Biển số xe ${province} bắt đầu bằng số mấy?`,
+      `Tỉnh ${province} có đầu biển số xe là bao nhiêu?`,
+    ];
+    return templates[randomInt(templates.length)];
   }
 
   if (category === 'sode') {
-    if (typeof lotteryAnimalData !== 'undefined' && lotteryAnimalData[number]) {
-      const name = lotteryAnimalData[number];
-      return `Trong số đề, ${name} là số mấy?`;
-    }
-    return null;
+    const name = lotteryAnimalData[number];
+    const templates = [
+      `Trong số đề, ${name} là số mấy?`,
+      `Tịch số đề, ${name} mang số bao nhiêu?`,
+    ];
+    return templates[randomInt(templates.length)];
+  }
+
+  if (category === 'proverb') {
+    return proverbData[number][randomInt(proverbData[number].length)];
+  }
+
+  if (category === 'riddle') {
+    return riddleData[number][randomInt(riddleData[number].length)];
+  }
+
+  if (category === 'football') {
+    const entry = footballData[number][randomInt(footballData[number].length)];
+    const templates = [
+      `Số áo của ${entry.player} tại ${entry.team} là mấy?`,
+      `Cầu thủ ${entry.player} mặc áo số mấy khi chơi cho ${entry.team}?`,
+      `${entry.player} ở ${entry.team} mang áo số bao nhiêu?`,
+    ];
+    return templates[randomInt(templates.length)];
+  }
+
+  if (category === 'history') {
+    return historyDateData[number][randomInt(historyDateData[number].length)];
   }
 
   return null; // đọc số bình thường
