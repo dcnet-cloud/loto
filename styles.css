@@ -143,10 +143,54 @@ header h1 {
   color: #fff;
 }
 
+.btn-auto {
+  background: var(--cell-bg);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+.btn-auto.active {
+  background: var(--gold);
+  color: var(--bg);
+}
+
 .btn-reset {
   background: var(--surface);
   color: var(--text-muted);
   border: 1px solid var(--cell-border);
+}
+
+/* Auto settings */
+.auto-settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.auto-settings input {
+  width: 48px;
+  padding: 6px 4px;
+  border: 1px solid var(--cell-border);
+  border-radius: 6px;
+  background: var(--cell-bg);
+  color: var(--text);
+  font-size: 0.85rem;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.auto-settings input::-webkit-inner-spin-button,
+.auto-settings input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.auto-settings input:disabled {
+  opacity: 0.4;
 }
 
 /* Number Grid - fills remaining space */

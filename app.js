@@ -100,27 +100,66 @@ function gameOver() {
   $callBtn.disabled = true;
 }
 
+// --- Auto Mode ---
+const $autoBtn = document.getElementById('autoBtn');
+const $intervalInput = document.getElementById('intervalInput');
+let autoTimer = null;
+let isAuto = false;
+
+function doCall() {
+  const num = callNumber();
+  if (num === null) return false;
+  updateDisplay(num);
+  speak(num);
+  if (remaining.length === 0) {
+    stopAuto();
+    gameOver();
+    return false;
+  }
+  return true;
+}
+
+function startAuto() {
+  isAuto = true;
+  $autoBtn.textContent = 'DỪNG';
+  $autoBtn.classList.add('active');
+  $callBtn.disabled = true;
+  $intervalInput.disabled = true;
+  autoTick();
+}
+
+function stopAuto() {
+  isAuto = false;
+  clearTimeout(autoTimer);
+  autoTimer = null;
+  $autoBtn.textContent = 'TỰ ĐỘNG';
+  $autoBtn.classList.remove('active');
+  $callBtn.disabled = remaining.length === 0;
+  $intervalInput.disabled = false;
+}
+
+function autoTick() {
+  if (!isAuto) return;
+  const ok = doCall();
+  if (ok) {
+    const sec = Math.max(1, parseInt($intervalInput.value) || 5);
+    autoTimer = setTimeout(autoTick, sec * 1000);
+  }
+}
+
 // --- Events ---
 let busy = false;
 
 $callBtn.addEventListener('click', () => {
-  if (busy) return;
+  if (busy || isAuto) return;
   busy = true;
-
-  const num = callNumber();
-  if (num === null) {
-    busy = false;
-    return;
-  }
-
-  updateDisplay(num);
-  speak(num);
-
-  if (remaining.length === 0) {
-    gameOver();
-  }
-
+  doCall();
   setTimeout(() => { busy = false; }, 300);
+});
+
+$autoBtn.addEventListener('click', () => {
+  if (remaining.length === 0) return;
+  isAuto ? stopAuto() : startAuto();
 });
 
 $resetBtn.addEventListener('click', () => {
@@ -128,6 +167,7 @@ $resetBtn.addEventListener('click', () => {
 });
 
 $confirmYes.addEventListener('click', () => {
+  stopAuto();
   speechSynthesis.cancel();
   initGame();
   resetDisplay();
