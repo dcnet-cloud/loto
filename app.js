@@ -11,7 +11,11 @@ function speak(number) {
 
   speechSynthesis.cancel();
 
-  const text = `Số ${number}`;
+  let text = `Số ${number}`;
+  console.log('text: ', text);
+  if (typeof lottoData !== 'undefined' && lottoData[number - 1]) {
+    text = lottoData[number - 1];
+  }
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'vi-VN';
   utterance.rate = 0.9;
