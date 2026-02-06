@@ -166,27 +166,31 @@ function generateMathPhrase(n) {
  *   9. Null → đọc "Số X" bình thường
  */
 function getRandomPhrase(number) {
-  // Thu thập các pool có dữ liệu cho số này
-  const available = [];
+  // Thu thập các pool có dữ liệu + trọng số ưu tiên
+  // culture=3, math/proverb/riddle/sode=2, bienso/football/history/null=1
+  const weighted = [];
+  function addPool(name, weight) {
+    for (let i = 0; i < weight; i++) weighted.push(name);
+  }
 
   if (typeof lottoData !== 'undefined' && lottoData[number] && lottoData[number].length > 0)
-    available.push('culture');
-  available.push('math'); // luôn có
+    addPool('culture', 3);
+  addPool('math', 2);
   if (typeof licensePlateData !== 'undefined' && licensePlateData[number])
-    available.push('bienso');
+    addPool('bienso', 1);
   if (typeof lotteryAnimalData !== 'undefined' && lotteryAnimalData[number])
-    available.push('sode');
+    addPool('sode', 1);
   if (typeof proverbData !== 'undefined' && proverbData[number] && proverbData[number].length > 0)
-    available.push('proverb');
+    addPool('proverb', 2);
   if (typeof riddleData !== 'undefined' && riddleData[number] && riddleData[number].length > 0)
-    available.push('riddle');
+    addPool('riddle', 2);
   if (typeof footballData !== 'undefined' && footballData[number] && footballData[number].length > 0)
-    available.push('football');
+    addPool('football', 1);
   if (typeof historyDateData !== 'undefined' && historyDateData[number] && historyDateData[number].length > 0)
-    available.push('history');
-  available.push(null); // đọc số bình thường
+    addPool('history', 1);
+  addPool(null, 1);
 
-  const category = available[randomInt(available.length)];
+  const category = weighted[randomInt(weighted.length)];
 
   if (category === 'culture') {
     return lottoData[number][randomInt(lottoData[number].length)];
