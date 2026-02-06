@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>Lô Tô Caller</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>LÔ TÔ</h1>
+    </header>
+
+    <section class="display">
+      <div id="currentNumber" class="current-number">--</div>
+      <div id="stats" class="stats">Đã gọi: <span id="calledCount">0</span> / 90</div>
+    </section>
+
+    <section class="controls">
+      <button id="callBtn" class="btn btn-call">GỌI SỐ</button>
+      <button id="resetBtn" class="btn btn-reset">CHƠI LẠI</button>
+    </section>
+
+    <section class="board">
+      <div id="numberBoard" class="number-grid"></div>
+    </section>
+
+    <div id="confirmOverlay" class="overlay hidden">
+      <div class="confirm-box">
+        <p>Chơi ván mới?</p>
+        <div class="confirm-actions">
+          <button id="confirmYes" class="btn btn-call">Có</button>
+          <button id="confirmNo" class="btn btn-reset">Không</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

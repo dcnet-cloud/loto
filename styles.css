@@ -1,0 +1,225 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --accent: #e94560;
+  --gold: #f5c518;
+  --text: #eee;
+  --text-muted: #888;
+  --called: #e94560;
+  --cell-bg: #0f3460;
+  --cell-border: #1a4a7a;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+header {
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--gold);
+}
+
+/* Display */
+.display {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.current-number {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--gold);
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.current-number.pop {
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0.5; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.current-number.done {
+  font-size: 2.5rem;
+  color: var(--accent);
+}
+
+.stats {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.1s;
+  letter-spacing: 1px;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-call {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-reset {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--cell-border);
+}
+
+/* Number Grid */
+.board {
+  flex: 1;
+}
+
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cell-bg);
+  border: 1px solid var(--cell-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.cell.called {
+  background: var(--called);
+  color: #fff;
+  border-color: var(--called);
+  font-weight: 800;
+}
+
+.cell.just {
+  animation: cellPop 0.4s ease;
+}
+
+@keyframes cellPop {
+  0% { transform: scale(0.7); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Confirm Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.confirm-box {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 28px 32px;
+  text-align: center;
+  width: 280px;
+}
+
+.confirm-box p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-actions .btn {
+  padding: 12px;
+  font-size: 1rem;
+}
+
+/* Responsive - small phones */
+@media (max-width: 360px) {
+  .number-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+  }
+  .cell {
+    font-size: 0.75rem;
+    border-radius: 4px;
+  }
+  .current-number {
+    font-size: 5rem;
+  }
+}
