@@ -29,7 +29,7 @@ function delay(ms) {
 
 /**
  * Flow gọi số:
- * - Có câu rao: đọc câu rao → chờ 3s (user đoán) → đọc "là con số X"
+ * - Có câu rao: đọc câu rao → chờ 3s (user đoán) → đọc "là số X"
  * - Không có câu rao: đọc "Số X" bình thường
  *
  * Dùng generation counter để tránh race condition khi gọi số liên tục.
@@ -48,7 +48,7 @@ async function speak(number) {
     if (gen !== speakGen) return;
     await delay(3000);
     if (gen !== speakGen) return;
-    await sayText(`là con số ${number}`);
+    await sayText(`là số ${number}`);
   } else {
     await sayText(`Số ${number}`);
   }
