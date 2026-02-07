@@ -40,8 +40,9 @@ async function speak(number) {
   speechSynthesis.cancel();
   const gen = ++speakGen;
 
-  // Lấy câu rao random (nếu có)
-  const phrase = getRandomPhrase(number);
+  // Lấy câu rao random (nếu bật rao vui)
+  const raoEnabled = document.getElementById('raoToggle').checked;
+  const phrase = raoEnabled ? getRandomPhrase(number) : null;
 
   if (phrase) {
     await sayText(phrase);
