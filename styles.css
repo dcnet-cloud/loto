@@ -381,6 +381,53 @@ header h1 {
   flex-shrink: 0;
 }
 
+/* Voice warning */
+.voice-warning {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.voice-warning.hidden {
+  display: none;
+}
+
+/* Voice alert popup */
+.voice-alert-box {
+  background: var(--surface);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  text-align: center;
+  width: 300px;
+  max-width: 90vw;
+}
+
+.voice-alert-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.voice-alert-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff6b6b;
+  margin-bottom: 12px;
+}
+
+.voice-alert-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
 /* Number Grid - fills remaining space */
 .board {
   flex: 1;

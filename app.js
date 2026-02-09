@@ -246,10 +246,25 @@ function getRandomPhrase(number) {
   return null; // đọc số bình thường
 }
 
-// Preload voices (some browsers load async)
+// Preload voices & check Vietnamese voice availability
+let voiceChecked = false;
+function checkVietnameseVoice() {
+  const voices = speechSynthesis.getVoices();
+  if (voices.length === 0) return; // voices chưa load xong
+  const hasVi = voices.some(v => v.lang.startsWith('vi'));
+  document.getElementById('voiceWarning').classList.toggle('hidden', hasVi);
+  if (!hasVi && !voiceChecked) document.getElementById('voiceOverlay').classList.remove('hidden');
+  voiceChecked = true;
+}
+
 if ('speechSynthesis' in window) {
   speechSynthesis.getVoices();
-  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => {
+    speechSynthesis.getVoices();
+    checkVietnameseVoice();
+  };
+  // Một số trình duyệt load voices đồng bộ
+  checkVietnameseVoice();
 }
 
 // --- Game State ---
@@ -414,6 +429,15 @@ $confirmNo.addEventListener('click', () => {
 // Close overlay on background click
 $overlay.addEventListener('click', (e) => {
   if (e.target === $overlay) $overlay.classList.add('hidden');
+});
+
+// Voice warning overlay
+const $voiceOverlay = document.getElementById('voiceOverlay');
+document.getElementById('voiceOverlayClose').addEventListener('click', () => {
+  $voiceOverlay.classList.add('hidden');
+});
+$voiceOverlay.addEventListener('click', (e) => {
+  if (e.target === $voiceOverlay) $voiceOverlay.classList.add('hidden');
 });
 
 // --- QR Popup ---
